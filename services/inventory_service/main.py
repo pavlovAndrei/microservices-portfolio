@@ -1,6 +1,14 @@
-def consume_events():
-    print("Listening to Kafka (placeholder)")
+from kafka import KafkaConsumer
+import json
 
+consumer = KafkaConsumer(
+    'order_created',
+    bootstrap_servers='localhost:9092',
+    auto_offset_reset='earliest',
+    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+)
 
-if __name__ == "__main__":
-    consume_events()
+print("Inventory service listening...")
+
+for message in consumer:
+    print("Inventory received:", message.value)

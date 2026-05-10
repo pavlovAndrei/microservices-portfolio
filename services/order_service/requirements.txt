@@ -3,3 +3,4 @@ uvicorn
 requests
 grpcio
 protobuf
+kafka-python
