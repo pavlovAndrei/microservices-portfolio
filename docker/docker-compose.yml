@@ -28,8 +28,10 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
+      KAFKA_LISTENERS: PLAINTEXT://:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      ALLOW_PLAINTEXT_LISTENER: "yes"
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
@@ -67,3 +69,17 @@ services:
 
     depends_on:
       - kafka
+
+  tests:
+    build:
+      context: ..
+      dockerfile: tests/Dockerfile
+
+    depends_on:
+      - kafka
+      - order_service
+      - inventory_service
+
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    command: pytest -v

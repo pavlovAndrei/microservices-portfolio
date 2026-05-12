@@ -61,6 +61,9 @@ app = FastAPI()
 
 create_topic()
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 @app.post("/order")
 def create_order():
@@ -83,7 +86,7 @@ def create_order():
     producer = get_kafka_producer()
 
     producer.send("order_created", event)
-
+    producer.flush()
     print("Event sent to Kafka", flush=True)
 
     return {
