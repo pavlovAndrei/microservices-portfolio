@@ -26,10 +26,44 @@ services:
 
     environment:
       KAFKA_BROKER_ID: 1
-
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+  payment_service:
+    build: ../services/payment_service
+
+    ports:
+      - "50051:50051"
+
+    depends_on:
+      - kafka
+
+
+  order_service:
+    build: ../services/order_service
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - payment_service
+      - kafka
+
+
+  inventory_service:
+    build: ../services/inventory_service
+
+    depends_on:
+      - kafka
+
+
+  notification_service:
+    build: ../services/notification_service
+
+    depends_on:
+      - kafka
