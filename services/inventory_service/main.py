@@ -2,6 +2,8 @@ from kafka import KafkaConsumer
 import json
 import time
 
+from framework.config import KAFKA_TOPIC_ORDER
+
 
 def main():
 
@@ -12,7 +14,7 @@ def main():
         try:
 
             consumer = KafkaConsumer(
-                'order_created',
+                KAFKA_TOPIC_ORDER,
                 bootstrap_servers='kafka:9092',
                 auto_offset_reset='earliest',
                 group_id='inventory-service',

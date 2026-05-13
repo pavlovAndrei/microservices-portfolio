@@ -9,6 +9,7 @@ import time
 
 import payment_pb2
 import payment_pb2_grpc
+from framework.config import KAFKA_TOPIC_ORDER
 
 
 def create_topic():
@@ -22,7 +23,7 @@ def create_topic():
 
             topic_list = [
                 NewTopic(
-                    name='order_created',
+                    name=KAFKA_TOPIC_ORDER,
                     num_partitions=1,
                     replication_factor=1
                 )
@@ -85,7 +86,7 @@ def create_order():
 
     producer = get_kafka_producer()
 
-    producer.send("order_created", event)
+    producer.send(KAFKA_TOPIC_ORDER, event)
     producer.flush()
     print("Event sent to Kafka", flush=True)
 
