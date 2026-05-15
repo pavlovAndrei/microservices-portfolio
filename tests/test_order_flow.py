@@ -1,4 +1,6 @@
-from framework.config import KAFKA_TOPIC_ORDER
+import os
+
+KAFKA_TOPIC_ORDER = os.getenv("KAFKA_TOPIC_ORDER", "order_created")
 from tests.clients.order_client import OrderClient
 from tests.utils.kafka_helper import wait_for_event
 

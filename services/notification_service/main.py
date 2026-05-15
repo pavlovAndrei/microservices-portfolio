@@ -1,8 +1,10 @@
 from kafka import KafkaConsumer
 import json
+import os
 import time
 
-from framework.config import KAFKA_TOPIC_ORDER
+KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
+KAFKA_TOPIC_ORDER = os.getenv("KAFKA_TOPIC_ORDER", "order_created")
 
 
 def main():
@@ -15,7 +17,7 @@ def main():
 
             consumer = KafkaConsumer(
                 KAFKA_TOPIC_ORDER,
-                bootstrap_servers='kafka:9092',
+                bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
                 auto_offset_reset='earliest',
                 group_id='notification-service',
                 value_deserializer=lambda m: json.loads(m.decode('utf-8')),

@@ -5,11 +5,15 @@ from kafka.errors import TopicAlreadyExistsError
 
 import grpc
 import json
+import os
 import time
 
 import payment_pb2
 import payment_pb2_grpc
-from framework.config import KAFKA_TOPIC_ORDER
+
+KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
+KAFKA_TOPIC_ORDER = os.getenv("KAFKA_TOPIC_ORDER", "order_created")
+PAYMENT_GRPC_TARGET = os.getenv("PAYMENT_GRPC_TARGET", "payment_service:50051")
 
 
 def create_topic():
@@ -18,7 +22,7 @@ def create_topic():
 
         try:
             admin_client = KafkaAdminClient(
-                bootstrap_servers='kafka:9092'
+                bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS
             )
 
             topic_list = [
@@ -54,7 +58,7 @@ def create_topic():
 def get_kafka_producer():
 
     return KafkaProducer(
-        bootstrap_servers='kafka:9092',
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
         value_serializer=lambda v: json.dumps(v).encode('utf-8')
     )
 
@@ -69,7 +73,7 @@ def health():
 @app.post("/order")
 def create_order():
 
-    channel = grpc.insecure_channel('payment_service:50051')
+    channel = grpc.insecure_channel(PAYMENT_GRPC_TARGET)
 
     stub = payment_pb2_grpc.PaymentServiceStub(channel)
 
