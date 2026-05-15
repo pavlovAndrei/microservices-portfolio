@@ -1,11 +1,12 @@
-FROM python:3.11
+FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY /tests /app/tests/
-COPY /tests/requirements.txt /app/requirements.txt
+COPY tests/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir -r /app/requirements.txt
+COPY tests /app/tests
+COPY framework /app/framework
 
 ENV PYTHONPATH=/app
 

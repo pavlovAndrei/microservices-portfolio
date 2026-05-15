@@ -37,7 +37,9 @@ services:
 
 
   payment_service:
-    build: ../services/payment_service
+    build:
+      context: ..
+      dockerfile: services/payment_service/Dockerfile
 
     ports:
       - "50051:50051"
@@ -47,7 +49,9 @@ services:
 
 
   order_service:
-    build: ../services/order_service
+    build:
+      context: ..
+      dockerfile: services/order_service/Dockerfile
 
     ports:
       - "8000:8000"
@@ -58,14 +62,18 @@ services:
 
 
   inventory_service:
-    build: ../services/inventory_service
+    build:
+      context: ..
+      dockerfile: services/inventory_service/Dockerfile
 
     depends_on:
       - kafka
 
 
   notification_service:
-    build: ../services/notification_service
+    build:
+      context: ..
+      dockerfile: services/notification_service/Dockerfile
 
     depends_on:
       - kafka
@@ -82,4 +90,6 @@ services:
 
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC_ORDER: order_created
+      ORDER_SERVICE_URL: http://order_service:8000
     command: pytest -v -s
