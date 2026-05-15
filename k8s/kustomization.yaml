@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: portfolio
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - zookeeper.yaml
+  - kafka.yaml
+  - payment-service.yaml
+  - order-service.yaml
+  - inventory-service.yaml
+  - notification-service.yaml
+
+# Uncomment to run integration tests as a Job after services are up:
+#  - tests-job.yaml
